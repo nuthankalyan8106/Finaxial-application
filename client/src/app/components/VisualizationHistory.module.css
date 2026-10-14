@@ -1,0 +1,130 @@
+.container {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem 0;
+  color: #1e293b;
+}
+
+.chartSelector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.chartTab {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: 1px solid #e2e8f0;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: #64748b;
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.2s ease;
+}
+
+.chartTab:hover {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.activeChartTab {
+  color: #fff;
+  background-color: #2563eb;
+  border-color: #2563eb;
+}
+
+.chartContainer {
+  position: relative;
+  height: 250px;
+}
+
+.chart {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.chartDescription {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background-color: #f8fafc;
+  border-radius: 0.25rem;
+  border-left: 2px solid #2563eb;
+}
+
+.chartTitle {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem 0;
+  color: #334155;
+}
+
+.description {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.emptyState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100px;
+  width: 100%;
+  background-color: #f8fafc;
+  border-radius: 0.5rem;
+  text-align: center;
+}
+
+.emptyState p {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.dark .container, :global(.dark) .container {
+  background-color: #23293a !important;
+  color: #f9fafb !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.18);
+}
+.dark .title, :global(.dark) .title {
+  color: #fff !important;
+}
+.dark .chartDescription, :global(.dark) .chartDescription {
+  background-color: #181c24 !important;
+  border-left: 2px solid #6366f1 !important;
+}
+.dark .chartTitle, :global(.dark) .chartTitle {
+  color: #f9fafb !important;
+}
+.dark .description, :global(.dark) .description {
+  color: #9ca3af !important;
+}
+.dark .emptyState, :global(.dark) .emptyState {
+  background-color: #181c24 !important;
+}
+.dark .emptyState p, :global(.dark) .emptyState p {
+  color: #64748b !important;
+}
+
+@media (max-width: 768px) {
+  .chartContainer {
+    height: 200px;
+  }
+} 

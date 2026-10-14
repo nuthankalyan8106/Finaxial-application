@@ -1,0 +1,1718 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000 !important;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+.modalContent {
+  background-color: white;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 1200px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18), 0 1.5px 6px rgba(0,0,0,0.08);
+  border: 1.5px solid #e5e7eb;
+  overflow: hidden;
+  position: relative; /* Add position for proper stacking context */
+  z-index: 1005; /* Add z-index higher than workspace elements */
+}
+
+.modalHeader {
+  padding: 1.25rem 2rem;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8fafc;
+  border-radius: 18px 18px 0 0;
+}
+
+.modalHeader h2 {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 600;
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.fileIcon {
+  font-size: 1.125rem;
+}
+
+.fileTypeIcon {
+  margin-right: 0.375rem;
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 1.375rem;
+  cursor: pointer;
+  color: #64748b;
+  padding: 0.375rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  line-height: 1;
+}
+
+.closeButton:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.tableContainer {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  padding: 0.75rem;
+  max-height: calc(100vh - 280px);
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  /* Ensure scrollbars are visible in all browsers */
+  -ms-overflow-style: scrollbar;
+}
+
+.tableWrapper {
+  flex: 1;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  min-width: 100%;
+  max-width: 100%;
+  transform-origin: top left;
+  transform: scale(var(--zoom-level, 1));
+  /* Force scrollbars to always be visible */
+  -ms-overflow-style: scrollbar;
+}
+
+/* Fixed horizontal scrollbar container */
+.horizontalScrollContainer {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.verticalScrollContainer {
+  flex: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.tableInnerWrapper {
+  overflow: visible;
+  min-width: max-content;
+}
+
+/* Enhanced scrollbar styling for better visibility during zoom and scrolling */
+.tableContainer::-webkit-scrollbar,
+.tableWrapper::-webkit-scrollbar,
+.horizontalScrollContainer::-webkit-scrollbar,
+.verticalScrollContainer::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+  /* Ensure scrollbars are always shown when needed */
+  -webkit-appearance: none;
+}
+
+.tableContainer::-webkit-scrollbar-track,
+.tableWrapper::-webkit-scrollbar-track,
+.horizontalScrollContainer::-webkit-scrollbar-track,
+.verticalScrollContainer::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 7px;
+  margin: 2px;
+  border: 1px solid #e2e8f0;
+}
+
+.tableContainer::-webkit-scrollbar-thumb,
+.tableWrapper::-webkit-scrollbar-thumb,
+.horizontalScrollContainer::-webkit-scrollbar-thumb,
+.verticalScrollContainer::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 7px;
+  border: 2px solid #f1f5f9;
+  /* Make scrollbar thumb more visible */
+  min-height: 20px;
+  min-width: 20px;
+}
+
+.tableContainer::-webkit-scrollbar-thumb:hover,
+.tableWrapper::-webkit-scrollbar-thumb:hover,
+.horizontalScrollContainer::-webkit-scrollbar-thumb:hover,
+.verticalScrollContainer::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+.tableContainer::-webkit-scrollbar-corner,
+.tableWrapper::-webkit-scrollbar-corner,
+.horizontalScrollContainer::-webkit-scrollbar-corner,
+.verticalScrollContainer::-webkit-scrollbar-corner {
+  background: #f1f5f9;
+}
+
+.previewTable {
+  width: 100%;
+  min-width: max-content;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.875rem;
+  background-color: white;
+  transform-origin: 0 0;
+  transition: all 0.1s ease-out;
+  table-layout: auto;
+  margin: 0;
+  /* Ensure table maintains its width for horizontal scrolling */
+  width: max-content;
+  min-width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.previewTable thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.previewTable th {
+  background: #f8fafc;
+  color: #334155;
+  font-weight: 500;
+  font-size: 0.875rem;
+  border-bottom: 1px solid #ffffff !important;
+  padding: 0.75rem 1.25rem;
+  letter-spacing: 0;
+}
+
+.previewTable td {
+  padding: 0.75rem 1.25rem;
+  color: #475569;
+  border-bottom: 1px solid #ffffff;
+  white-space: nowrap;
+  min-width: 130px;
+  max-width: 280px; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 0.875rem;
+}
+
+.evenRow {
+  background-color: white;
+  border-radius: 0 0 12px 12px;
+}
+
+.oddRow {
+  background-color: #f8fafc;
+  border-radius: 0 0 12px 12px;
+}
+
+.previewTable tr:hover td {
+  background-color: #f1f5f9;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  border-top: 1px solid #e5e7eb;
+  background-color: #f8fafc;
+  position: sticky;
+  bottom: 0;
+  z-index: 1010; /* Increased z-index to ensure it's above the workspace export button */
+}
+
+.footerLeft {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.footerRight {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cancelButton, .uploadButton {
+  padding: 0.625rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+}
+
+.cancelButton {
+  padding: 6px 14px;
+  min-width: 90px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  border: none;
+  background-color: white;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #f3f4f6;
+}
+
+.cancelButton:hover {
+  background-color: #e0e7ff;
+  border-color: #d1d5db;
+  color: #2563eb;
+}
+
+.uploadButton {
+  padding: 6px 14px;
+  min-width: 120px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  border: none;
+  background-color: #2563eb;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  background: linear-gradient(90deg, #2563eb 0%, #1e40af 100%);
+}
+
+.uploadButton:hover {
+  background-color: #1d4ed8;
+  background: linear-gradient(90deg, #1e40af 0%, #2563eb 100%);
+}
+
+/* Button disabled states */
+.fileTab:disabled,
+.sheetTab:disabled,
+.columnToggleButton:disabled,
+.schemaButton:disabled,
+.cancelButton:disabled,
+.uploadButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.uploadIcon {
+  font-size: 1.125rem;
+}
+
+.loadingSpinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.fileTabs {
+  display: flex;
+  overflow-x: auto;
+  padding: 0.375rem 1rem 0;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  gap: 0.25rem;
+  flex-wrap: nowrap;
+  border-radius: 8px 8px 0 0;
+  margin-bottom: 0.375rem;
+  padding: 0.5rem 1rem 0.25rem;
+  background: #ffffff;
+  gap: 0.375rem;
+}
+
+.fileTabs::-webkit-scrollbar {
+  height: 4px;
+}
+
+.fileTabs::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 4px;
+}
+
+.fileTab {
+  padding: 0.75rem 1rem;
+  border-radius: 6px 6px 0 0;
+  border: none;
+  border-radius: 10px;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #64748b;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  outline: none;
+  flex-shrink: 0;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  background: rgb(245, 253, 255);
+  color: #6c768d;
+  transition: background 0.2s, color 0.2s;
+}
+
+.fileTab:hover {
+  color: #334155;
+  background-color: rgba(241, 245, 249, 0.8);
+  background: #e0e7ff;
+  color: #1e40af;
+}
+
+.activeTab {
+  background-color: white;
+  color: #2563eb;
+  border-color: #e5e7eb;
+  border-bottom-color: white;
+  position: relative;
+  top: 1px;
+  z-index: 1;
+  background: #2563eb;
+  color: #fff !important;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.08);
+}
+
+.activeTab:hover {
+  color: #1d4ed8;
+  background-color: white;
+}
+
+.loadingTable {
+  padding: 2rem;
+  text-align: center;
+  color: #64748b;
+  font-style: italic;
+}
+
+.sheetTabs {
+  display: flex;
+  overflow-x: auto;
+  background-color: #f8fafc;
+  
+  padding: 0 1rem;
+  min-height: 48px;
+  align-items: center;
+  border-radius: 10px 10px 0 0;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1.25rem 0.25rem;
+  background: #ffffff;
+  gap: 0.5rem;
+}
+
+.sheetTabs::-webkit-scrollbar {
+  height: 6px;
+}
+
+.sheetTabs::-webkit-scrollbar-thumb {
+  background-color: #94a3b8;
+  border-radius: 3px;
+}
+
+.sheetTabs::-webkit-scrollbar-track {
+  background-color: #e5e7eb;
+}
+
+.sheetTabsScroll {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.25rem;
+  align-items: center;
+  min-height: 48px;
+}
+
+.sheetTab {
+  padding: 0.75rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 400;
+  background: rgb(245, 253, 255);
+  color: #6c768d;
+  border: none;
+  border-radius: 6px 6px 0 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  position: relative;
+  margin-bottom: -1px;
+  border-bottom: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 450;
+  background: transparent;
+  
+  transition: background 0.2s, color 0.2s;
+}
+
+.sheetTab:hover {
+  color: #334155;
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+  background: #e0e7ff;
+  color: #1e40af;
+}
+
+.activeSheetTab {
+  color: #0f172a;
+  font-weight: 450;
+  
+  border-bottom-color: white;
+  z-index: 1;
+  background: rgb(245, 253, 255);
+  color: #6c768d !important;
+}
+
+.activeSheetTab::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #3b82f6;
+}
+
+.schemaButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border: none;
+  border-radius: 8px;
+  background-color: white;
+  color: #475569;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.schemaButton:hover:not(:disabled) {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #1e293b;
+}
+
+.schemaButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.schemaHelpIconWrapper {
+  display: inline-flex;
+  margin-left: 6px;
+}
+
+.schemaHelpIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #e2e8f0;
+  color: #475569;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: help;
+  position: relative;
+}
+
+.schemaHelpIcon:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  width: 280px;
+  
+  left: 22px;
+  padding: 8px 12px;
+  background-color: #334155;
+  color: white;
+  font-size: 12px;
+  font-weight: normal;
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  pointer-events: none;
+  text-align: left;
+  line-height: 1.4;
+}
+
+.schemaIcon {
+  font-size: 1rem;
+}
+
+.columnHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem;
+}
+
+.headerContent {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.columnToggleButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0.6;
+}
+
+.columnToggleButton:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  opacity: 1;
+}
+
+.userGuidance {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  background-color: #fff;
+  border-bottom: 1px solid #e0f2fe;
+  color: rgb(156, 156, 156);
+  font-size: 0.875rem;
+}
+
+.userGuidance svg {
+  flex-shrink: 0;
+}
+
+.hiddenColumnsWrapper {
+  position: relative;
+  margin-right: 1rem;
+}
+
+.hiddenColumnsMenu {
+  position: absolute;
+  bottom: calc(100% + 0.5rem);
+  left: 0;
+  min-width: 280px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+  z-index: 20;
+  padding: 0.5rem;
+}
+
+.hiddenColumnsList {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.hiddenColumnItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.hiddenColumnItem:hover {
+  background-color: #f8fafc;
+}
+
+.hiddenColumnItem span {
+  color: #1e293b;
+  font-size: 0.875rem;
+  margin-right: 1rem;
+}
+
+.showColumnButton {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.75rem;
+  border: none;
+  border-radius: 4px;
+  background-color: #2563eb;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.showColumnButton:hover {
+  background-color: #1d4ed8;
+}
+
+.showColumnButton svg {
+  width: 14px;
+  height: 14px;
+}
+
+.showHiddenColumnsButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background-color: white;
+  color: #1e293b;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.showHiddenColumnsButton:hover {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+}
+
+.hiddenColumnsCount {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e2e8f0;
+  color: #475569;
+  border-radius: 9999px;
+  padding: 0.125rem 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  margin-left: 0.25rem;
+}
+
+/* Enhanced styles for large datasets */
+.tableScrollContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+.tableScrollContainer::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.tableScrollContainer::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 6px;
+}
+
+.tableScrollContainer::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 6px;
+  border: 2px solid #f1f5f9;
+}
+
+.tableScrollContainer::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.tableScrollContainer::-webkit-scrollbar-corner {
+  background: #f1f5f9;
+}
+
+/* Cell content with tooltips for overflow */
+.cellContent {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: help;
+}
+
+.cellContent:hover {
+  overflow: visible;
+  white-space: normal;
+  word-break: break-word;
+  position: relative;
+  z-index: 5;
+  background-color: #f8fafc;
+  padding: 0.5rem;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* Sticky headers for large tables */
+.stickyHeader {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: #f8fafc;
+}
+
+/* Performance optimization for large tables */
+.virtualizedRow {
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.virtualizedCell {
+  flex: 0 0 auto;
+  padding: 0.5rem 1rem;
+  border-right: 1px solid #e2e8f0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 120px;
+  max-width: 300px;
+}
+
+/* Column Summary Section */
+.columnSummary {
+  padding: 1rem 2rem;
+  background-color: #f8fafc;
+  border-top: 1px solid #e5e7eb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.summaryHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.summaryIcon {
+  color: #16a34a;
+  flex-shrink: 0;
+}
+
+.summaryTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.summaryContent {
+  margin-left: 1.5rem;
+}
+
+.summaryStats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.statItem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.statLabel {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.statValue {
+  color: #111827;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.hiddenNote {
+  color: #f59e0b;
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+.columnsList {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+}
+
+.columnsLabel {
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.columnsValues {
+  color: #374151;
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.moreColumns {
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .columnSummary {
+    padding: 0.875rem 1rem;
+  }
+  
+  .statItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+  
+  .columnsList {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .modalContent {
+    width: 95%;
+    max-height: 95vh;
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .modalHeader {
+    padding: 1rem 1.5rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  
+  .modalFooter {
+    padding: 1rem 1.5rem;
+  }
+
+  .tableContainer {
+    padding: 0.5rem;
+    max-height: calc(100vh - 280px);
+  }
+
+  .previewContainer {
+    margin: 0.5rem;
+    max-height: calc(100vh - 300px);
+  }
+
+  .previewTable th,
+  .previewTable td {
+    padding: 0.5rem 0.75rem;
+    min-width: 100px;
+    max-width: 200px;
+    font-size: 0.75rem;
+  }
+
+  .footerLeft,
+  .footerRight {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .schemaButton,
+  .cancelButton,
+  .uploadButton {
+    padding: 8px 12px;
+    min-width: auto;
+    white-space: nowrap;
+  }
+
+  .showHiddenColumnsButton {
+    padding: 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .hiddenColumnsMenu {
+    min-width: 160px;
+  }
+
+  .hiddenColumnItem {
+    font-size: 0.75rem;
+  }
+  /* Enhanced mobile scrolling */
+  .tableContainer::-webkit-scrollbar,
+  .tableWrapper::-webkit-scrollbar,
+  .horizontalScrollContainer::-webkit-scrollbar,
+  .verticalScrollContainer::-webkit-scrollbar,
+  .stickyHorizontalScroll::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  .cellContent {
+    max-width: 150px;
+  }
+
+  .stickyHorizontalScroll {
+    height: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modalFooter {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .footerLeft,
+  .footerRight {
+    width: 100%;
+  }
+
+  .footerLeft {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .footerRight {
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  /* Optimize action button sizes for mobile */
+  .actionButton {
+    min-width: 120px;
+    max-width: 140px;
+    padding: 10px 12px;
+    font-size: 0.8125rem;
+    flex: 0 1 auto;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  .actionButton svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .schemaButton,
+  .cancelButton,
+  .uploadButton {
+    flex: 1;
+    justify-content: center;
+    max-width: 160px;
+    min-height: 44px;
+    font-size: 0.8125rem;
+    padding: 10px 12px;
+  }
+
+  /* Make cancel, transform data, and compliance check buttons smaller */
+  .cancelButton {
+    min-width: 90px;
+    max-width: 120px;
+    padding: 8px 10px;
+    font-size: 0.8125rem;
+  }
+
+  .uploadButton {
+    min-width: 110px;
+    max-width: 140px;
+    padding: 8px 12px;
+    font-size: 0.8125rem;
+  }
+
+  .previewTable th,
+  .previewTable td {
+    padding: 0.375rem 0.5rem;
+    min-width: 80px;
+    max-width: 120px;
+    font-size: 0.7rem;
+  }
+
+  .tableContainer {
+    padding: 0.25rem;
+    max-height: calc(100vh - 260px);
+  }
+
+  .previewContainer {
+    margin: 0.25rem;
+    max-height: calc(100vh - 280px);
+  }
+  /* Extra small scrollbars for mobile */
+  .tableContainer::-webkit-scrollbar,
+  .tableWrapper::-webkit-scrollbar,
+  .horizontalScrollContainer::-webkit-scrollbar,
+  .verticalScrollContainer::-webkit-scrollbar,
+  .stickyHorizontalScroll::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .stickyHorizontalScroll {
+    height: 12px;
+  }
+}
+
+.previewContainer {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  margin: 1rem;
+  min-height: 300px;
+  max-height: calc(100vh - 350px);
+  display: flex;
+  flex-direction: column;
+  /* Ensure container supports scrolling properly */
+  min-width: 0;
+}
+
+/* Sticky horizontal scrollbar */
+.stickyHorizontalScroll {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 17px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  z-index: 5;
+}
+
+.stickyHorizontalScroll::-webkit-scrollbar {
+  height: 12px;
+}
+
+.stickyHorizontalScroll::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 6px;
+}
+
+.stickyHorizontalScroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 6px;
+  border: 2px solid #f1f5f9;
+}
+
+.stickyHorizontalScroll::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.horizontalScrollContent {
+  height: 1px;
+  min-width: max-content;
+  width: 100%;
+}
+
+/* Synchronized scrolling */
+.syncScrollHorizontal {
+  overflow-x: hidden;
+}
+
+/* Firefox-specific scrollbar styling */
+.tableWrapper {
+  /* Force both scrollbars to always be visible in Firefox */
+  overflow: scroll;
+}
+
+/* Force visibility for all browsers */
+.tableWrapper::-webkit-scrollbar:horizontal {
+  height: 14px;
+  background: #f1f5f9;
+}
+
+.tableWrapper::-webkit-scrollbar:vertical {
+  width: 14px;
+  background: #f1f5f9;
+}
+
+.tableWrapper::-webkit-scrollbar-thumb:horizontal {
+  background: #94a3b8;
+  border-radius: 7px;
+}
+
+.tableWrapper::-webkit-scrollbar-thumb:vertical {
+  background: #94a3b8;
+  border-radius: 7px;
+}
+
+/* Ensure horizontal scrollbar is always visible when content overflows */
+.tableWrapper:has(.previewTable) {
+  overflow-x: scroll !important;
+  overflow-y: scroll !important;
+}
+
+/* Fallback for browsers that don't support :has() */
+@supports not selector(:has(*)) {
+  .tableWrapper {
+    overflow-x: scroll !important;
+    overflow-y: scroll !important;
+  }
+}
+
+/* Action buttons for anomaly detection, compliance checking, and data transformation */
+.actionButton {
+  padding: 6px 12px;
+  min-width: 110px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  border: 1px solid #e5e7eb;
+  background-color: white;
+  color: #4b5563;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative; /* Added for tooltip positioning */
+}
+
+/* Mobile responsive action buttons */
+@media (max-width: 768px) {
+  .actionButton {
+    min-width: 120px;
+    padding: 10px 14px;
+    font-size: 0.8125rem;
+    border-radius: 8px;
+  }
+  
+  .actionButton svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .actionButton {
+    min-width: 110px;
+    max-width: 130px;
+    padding: 8px 10px;
+    font-size: 0.75rem;
+    gap: 0.375rem;
+  }
+  
+  .actionButton svg {
+    width: 14px;
+    height: 14px;
+  }
+}
+
+.actionButton:hover {
+  background-color: #f8fafc;
+  border-color: #d1d5db;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.actionButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
+.actionButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.actionButton svg {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+}
+
+/* Action button tooltip styling */
+.actionButton[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  width: 280px;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 8px;
+  padding: 8px 12px;
+  background-color: #334155;
+  color: white;
+  font-size: 12px;
+  font-weight: normal;
+  border-radius: 6px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+  pointer-events: none;
+  text-align: left;
+  line-height: 1.4;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+  white-space: normal;
+}
+
+.actionButton[data-tooltip]::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: #334155;
+  margin-bottom: -4px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+  z-index: 101;
+}
+
+.actionButton[data-tooltip]:hover::after,
+.actionButton[data-tooltip]:hover::before {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Anomaly cell highlighting */
+.anomalyHigh {
+  background-color: rgba(239, 68, 68, 0.15) !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+  position: relative;
+}
+
+.anomalyHigh::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 6px;
+  height: 6px;
+  background-color: #ef4444;
+  border-radius: 50%;
+}
+
+.anomalyMedium {
+  background-color: rgba(245, 158, 11, 0.15) !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+  position: relative;
+}
+
+.anomalyMedium::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 6px;
+  height: 6px;
+  background-color: #f59e0b;
+  border-radius: 50%;
+}
+
+.anomalyLow {
+  background-color: rgba(34, 197, 94, 0.15) !important;
+  border: 1px solid rgba(34, 197, 94, 0.3) !important;
+  position: relative;
+}
+
+.anomalyLow::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 6px;
+  height: 6px;
+  background-color: #22c55e;
+  border-radius: 50%;
+}
+
+.anomalyDefault {
+  background-color: rgba(107, 114, 128, 0.15) !important;
+  border: 1px solid rgba(107, 114, 128, 0.3) !important;
+  position: relative;
+}
+
+.anomalyDefault::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  width: 6px;
+  height: 6px;
+  background-color: #6b7280;
+  border-radius: 50%;
+}
+
+/* Compliance cell highlighting */
+.complianceCritical {
+  background-color: rgba(220, 38, 127, 0.15) !important;
+  border: 1px solid rgba(220, 38, 127, 0.3) !important;
+  position: relative;
+}
+
+.complianceCritical::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 6px;
+  height: 6px;
+  background-color: #dc2626;
+  border-radius: 50%;
+}
+
+.complianceWarning {
+  background-color: rgba(251, 191, 36, 0.15) !important;
+  border: 1px solid rgba(251, 191, 36, 0.3) !important;
+  position: relative;
+}
+
+.complianceWarning::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 6px;
+  height: 6px;
+  background-color: #fbbf24;
+  border-radius: 50%;
+}
+
+.complianceInfo {
+  background-color: rgba(59, 130, 246, 0.15) !important;
+  border: 1px solid rgba(59, 130, 246, 0.3) !important;
+  position: relative;
+}
+
+.complianceInfo::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 6px;
+  height: 6px;
+  background-color: #3b82f6;
+  border-radius: 50%;
+}
+
+.complianceDefault {
+  background-color: rgba(156, 163, 175, 0.15) !important;
+  border: 1px solid rgba(156, 163, 175, 0.3) !important;
+  position: relative;
+}
+
+.complianceDefault::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 6px;
+  height: 6px;
+  background-color: #9ca3af;
+  border-radius: 50%;
+}
+
+/* Loading spinner for action buttons */
+.loadingSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Zoom functionality */
+.zoomable {
+  transition: transform 0.2s ease;
+}
+
+.zoomable[data-zoom-level="0.5"] {
+  transform: scale(0.5);
+}
+
+.zoomable[data-zoom-level="0.6"] {
+  transform: scale(0.6);
+}
+
+.zoomable[data-zoom-level="0.7"] {
+  transform: scale(0.7);
+}
+
+.zoomable[data-zoom-level="0.8"] {
+  transform: scale(0.8);
+}
+
+.zoomable[data-zoom-level="0.9"] {
+  transform: scale(0.9);
+}
+
+.zoomable[data-zoom-level="1"] {
+  transform: scale(1);
+}
+
+.zoomable[data-zoom-level="1.1"] {
+  transform: scale(1.1);
+}
+
+.zoomable[data-zoom-level="1.2"] {
+  transform: scale(1.2);
+}
+
+.zoomable[data-zoom-level="1.3"] {
+  transform: scale(1.3);
+}
+
+.zoomable[data-zoom-level="1.4"] {
+  transform: scale(1.4);
+}
+
+.zoomable[data-zoom-level="1.5"] {
+  transform: scale(1.5);
+}
+
+.zoomable[data-zoom-level="1.6"] {
+  transform: scale(1.6);
+}
+
+.zoomable[data-zoom-level="1.7"] {
+  transform: scale(1.7);
+}
+
+.zoomable[data-zoom-level="1.8"] {
+  transform: scale(1.8);
+}
+
+.zoomable[data-zoom-level="1.9"] {
+  transform: scale(1.9);
+}
+
+.zoomable[data-zoom-level="2"] {
+  transform: scale(2);
+}
+
+/* Dark theme overrides for Data Preview modal */
+:global(.dark) .modalContent {
+  background-color: #1f2937;
+  border: 1.5px solid #374151;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.32), 0 1.5px 6px rgba(0,0,0,0.18);
+}
+:global(.dark) .modalHeader {
+  background-color: #111827;
+  border-bottom: 1px solid #374151;
+  border-radius: 18px 18px 0 0;
+}
+:global(.dark) .modalHeader h2 {
+  color: #f9fafb;
+}
+:global(.dark) .closeButton {
+  color: #d1d5db;
+}
+:global(.dark) .closeButton:hover {
+  background-color: #374151;
+  color: #fff;
+}
+:global(.dark) .tableContainer {
+  background-color: #1f2937;
+}
+:global(.dark) .previewTable {
+  background-color: #1f2937;
+  border-radius: 12px;
+}
+:global(.dark) .previewTable th {
+  background: #1e293b;
+  color: #f9fafb;
+  font-weight: 500;
+  font-size: 0.97rem;
+  border-bottom: 1px solid #374151;
+  letter-spacing: 0;
+}
+:global(.dark) .previewTable td {
+  color: #d1d5db;
+  background-color: #1f2937;
+  border-bottom: 1px solid #374151;
+}
+:global(.dark) .evenRow {
+  background-color: #1e293b;
+  border-radius: 0 0 12px 12px;
+}
+:global(.dark) .oddRow {
+  background-color: #111827;
+  border-radius: 0 0 12px 12px;
+}
+:global(.dark) .fileTabs {
+  background: #1e293b;
+}
+:global(.dark) .sheetTabs {
+  background: #1e293b;
+}
+:global(.dark) .activeTab {
+  background-color: #374151;
+  color: #f9fafb;
+  background: #2563eb;
+  color: #fff !important;
+}
+:global(.dark) .modalFooter {
+  background-color: #111827;
+  border-top: 1px solid #374151;
+}
+:global(.dark) .cancelButton {
+  background: #374151;
+  color: #f9fafb;
+  border: 1.5px solid #374151;
+}
+:global(.dark) .cancelButton:hover {
+  background: #2563eb;
+  color: #fff;
+}
+:global(.dark) .uploadButton {
+  background: linear-gradient(90deg, #2563eb 0%, #1e40af 100%);
+  color: #fff;
+}
+:global(.dark) .uploadButton:hover {
+  background: linear-gradient(90deg, #1e40af 0%, #2563eb 100%);
+}
+:global(.dark) .schemaButton {
+  background-color: #374151;
+  color: #f9fafb;
+  border: 1px solid #374151;
+}
+:global(.dark) .schemaButton:hover:not(:disabled) {
+  background-color: #2563eb;
+  color: #fff;
+  border: 1px solid #2563eb;
+}
+:global(.dark) .footerRight > button {
+  background-color: #374151;
+  color: #f9fafb;
+  border: 1px solid #374151;
+}
+:global(.dark) .footerRight > button:hover:not(:disabled) {
+  background-color: #2563eb;
+  color: #fff;
+  border: 1px solid #2563eb;
+}
+:global(.dark) .previewTable tr:hover td {
+  background-color: #23293a;
+}
+:global(.dark) .userGuidance {
+  background-color: #23293a;
+  color: #9ca3af;
+  border: 1px solid #374151;
+}
+:global(.dark) .userGuidance svg {
+  color: #60a5fa;
+}
+:global(.dark) .tableContainer::-webkit-scrollbar,
+:global(.dark) .tableWrapper::-webkit-scrollbar,
+:global(.dark) .horizontalScrollContainer::-webkit-scrollbar,
+:global(.dark) .verticalScrollContainer::-webkit-scrollbar,
+:global(.dark) .fileTabs::-webkit-scrollbar,
+:global(.dark) .sheetTabs::-webkit-scrollbar,
+:global(.dark) .tableScrollContainer::-webkit-scrollbar {
+  background: #23293a;
+}
+:global(.dark) .tableContainer::-webkit-scrollbar-track,
+:global(.dark) .tableWrapper::-webkit-scrollbar-track,
+:global(.dark) .horizontalScrollContainer::-webkit-scrollbar-track,
+:global(.dark) .verticalScrollContainer::-webkit-scrollbar-track,
+:global(.dark) .fileTabs::-webkit-scrollbar-track,
+:global(.dark) .sheetTabs::-webkit-scrollbar-track,
+:global(.dark) .tableScrollContainer::-webkit-scrollbar-track {
+  background: #23293a;
+  border: 1px solid #374151;
+}
+:global(.dark) .tableContainer::-webkit-scrollbar-thumb,
+:global(.dark) .tableWrapper::-webkit-scrollbar-thumb,
+:global(.dark) .horizontalScrollContainer::-webkit-scrollbar-thumb,
+:global(.dark) .verticalScrollContainer::-webkit-scrollbar-thumb,
+:global(.dark) .fileTabs::-webkit-scrollbar-thumb,
+:global(.dark) .sheetTabs::-webkit-scrollbar-thumb,
+:global(.dark) .tableScrollContainer::-webkit-scrollbar-thumb {
+  background: #374151;
+  border-radius: 7px;
+  border: 2px solid #23293a;
+}
+:global(.dark) .tableContainer::-webkit-scrollbar-thumb:hover,
+:global(.dark) .tableWrapper::-webkit-scrollbar-thumb:hover,
+:global(.dark) .horizontalScrollContainer::-webkit-scrollbar-thumb:hover,
+:global(.dark) .verticalScrollContainer::-webkit-scrollbar-thumb:hover,
+:global(.dark) .fileTabs::-webkit-scrollbar-thumb:hover,
+:global(.dark) .sheetTabs::-webkit-scrollbar-thumb:hover,
+:global(.dark) .tableScrollContainer::-webkit-scrollbar-thumb:hover {
+  background: #60a5fa;
+}
+:global(.dark) .tableContainer::-webkit-scrollbar-corner,
+:global(.dark) .tableWrapper::-webkit-scrollbar-corner,
+:global(.dark) .horizontalScrollContainer::-webkit-scrollbar-corner,
+:global(.dark) .verticalScrollContainer::-webkit-scrollbar-corner,
+:global(.dark) .fileTabs::-webkit-scrollbar-corner,
+:global(.dark) .sheetTabs::-webkit-scrollbar-corner,
+:global(.dark) .tableScrollContainer::-webkit-scrollbar-corner {
+  background: #23293a;
+}
+
+/* Dark mode tooltip styling */
+:global(.dark) .actionButton[data-tooltip]::after {
+  background-color: #1e293b;
+  color: #e5e7eb;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  border: 1px solid #374151;
+}
+
+:global(.dark) .actionButton[data-tooltip]::before {
+  border-top-color: #1e293b;
+}
+
+:global(.dark) .schemaHelpIcon:hover::after {
+  background-color: #1e293b;
+  color: #e5e7eb;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+  border: 1px solid #374151;
+}

@@ -1,0 +1,262 @@
+.visualizationContainer {
+  width: 100%;
+  height: 100%;
+  min-height: 500px;
+  max-height: 100vh;
+  background-color: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  overflow: hidden;
+  position: relative;
+}
+
+.transformWrapper {
+  width: 100%;
+  height: 100%;
+  overflow: auto !important;
+}
+
+.transformComponent {
+  min-width: min-content;
+  min-height: min-content;
+}
+
+.schemaCanvas {
+  background-color: transparent;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+.table {
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+.tableHeader {
+  fill: #f1f5f9;
+  stroke: #e2e8f0;
+  stroke-width: 1;
+}
+
+.tableBody {
+  fill: white;
+  stroke: #e2e8f0;
+  stroke-width: 1;
+}
+
+.tableName {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  fill: #1e293b;
+  user-select: none;
+}
+
+.fieldName {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 12px;
+  fill: #475569;
+  user-select: none;
+}
+
+.fieldType {
+  font-family: monospace;
+  font-size: 12px;
+  fill: #94a3b8;
+  text-anchor: end;
+  user-select: none;
+}
+
+.primaryKey {
+  font-size: 12px;
+  fill: #eab308;
+}
+
+.foreignKey {
+  font-size: 12px;
+  fill: #2563eb;
+}
+
+/* Relationships container - each path handles its own events */
+
+.relationshipPath {
+  fill: none;
+  stroke: #94a3b8;
+  stroke-width: 2;
+  marker-end: url(#arrowhead);
+  /* Enable pointer events so relationships are visible */
+  pointer-events: stroke;
+}
+
+/* Keeping the class for compatibility but not adding any special styling */
+.relationshipPathHighlighted {
+  stroke: #64748b;
+}
+
+.relationshipPathHighlighted {
+  stroke: #1d4ed8;
+  stroke-width: 3;
+}
+
+.relationshipHitArea {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 20;
+  cursor: pointer;
+}
+
+.relationshipLabel {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 12px;
+  fill: #64748b;
+  font-weight: 600;
+  background-color: white;
+  padding: 2px 4px;
+  user-select: none;
+}
+
+.junctionTableLabel {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 10px;
+  fill: #94a3b8;
+  pointer-events: none;
+  font-style: italic;
+  user-select: none;
+}
+
+/* Add tooltip styles */
+.tooltip {
+  position: absolute;
+  background-color: #1e293b;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-family: system-ui, -apple-system, sans-serif;
+  pointer-events: none;
+  z-index: 50;
+  transition: opacity 0.2s ease-in-out;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.tooltip::before {
+  content: '';
+  position: absolute;
+  border: 6px solid transparent;
+}
+
+/* Zoom controls styling */
+.transformWrapper [class*='react-transform-wrapper'] {
+  cursor: grab !important;
+}
+
+.transformWrapper [class*='react-transform-wrapper']:active {
+  cursor: grabbing !important;
+}
+
+/* Add custom scrollbar styling */
+.visualizationContainer::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.visualizationContainer::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.visualizationContainer::-webkit-scrollbar-thumb {
+  background: #94a3b8;
+  border-radius: 4px;
+}
+
+.visualizationContainer::-webkit-scrollbar-thumb:hover {
+  background: #64748b;
+}
+
+/* Custom scrollbar styles */
+.transformWrapper::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.transformWrapper::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 6px;
+}
+
+.transformWrapper::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 6px;
+  border: 3px solid #f1f5f9;
+}
+
+.transformWrapper::-webkit-scrollbar-thumb:hover {
+  background-color: #94a3b8;
+}
+
+.transformWrapper::-webkit-scrollbar-corner {
+  background: #f1f5f9;
+}
+
+:global(.dark) .visualizationContainer {
+  background-color: #1f2937;
+  border: 1px solid #374151;
+}
+:global(.dark) .transformWrapper {
+  background-color: #1f2937;
+}
+:global(.dark) .tableHeader {
+  fill: #1e293b;
+  stroke: #374151;
+}
+:global(.dark) .tableBody {
+  fill: #111827;
+  stroke: #374151;
+}
+:global(.dark) .tableName {
+  fill: #f9fafb;
+}
+:global(.dark) .fieldName {
+  fill: #d1d5db;
+}
+:global(.dark) .fieldType {
+  fill: #60a5fa;
+}
+:global(.dark) .relationshipLabel {
+  fill: #9ca3af;
+  background-color: #1e293b;
+}
+:global(.dark) .junctionTableLabel {
+  fill: #60a5fa;
+}
+:global(.dark) .schemaModal {
+  background: #111827;
+  color: #f9fafb;
+}
+:global(.dark) .schemaModalHeader {
+  background: #1f2937;
+  color: #f9fafb;
+}
+:global(.dark) .schemaModalTitle {
+  color: #f9fafb;
+}
+:global(.dark) .schemaModalContent {
+  background: #1f2937;
+  color: #f9fafb;
+}
+:global(.dark) .visualizationContainer::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+:global(.dark) .visualizationContainer::-webkit-scrollbar-thumb {
+  background: #374151;
+}
+:global(.dark) .transformWrapper::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+:global(.dark) .transformWrapper::-webkit-scrollbar-thumb {
+  background-color: #374151;
+  border: 3px solid #1f2937;
+}
+:global(.dark) .transformWrapper::-webkit-scrollbar-corner {
+  background: #1f2937;
+}
